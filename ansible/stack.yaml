@@ -1,0 +1,133 @@
+Resources:
+  
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: 69.42.0.0/16
+      EnableDnsHostnames: True
+      EnableDnsSupport: True
+  
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: MSP2-IG
+
+  AttachIGtoVPC:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+  
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AvailabilityZone: eu-west-2a
+      CidrBlock: 69.42.1.0/24
+      MapPublicIpOnLaunch: True
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: MSP2-Subnet1
+  
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AvailabilityZone: eu-west-2b
+      CidrBlock: 69.42.2.0/24
+      MapPublicIpOnLaunch: True
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: MSP2-Subnet2
+
+  ElasticLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties: 
+      Listeners: 
+        - InstancePort: 80
+          LoadBalancerPort: 80
+          Protocol: tcp
+      LoadBalancerName: MSP2-LB
+      Scheme: internet-facing
+      Subnets: 
+        - !Ref Subnet1
+  
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties: 
+      AssociatePublicIpAddress: True
+      ImageId: ami-006a0174c6c25ac06
+      InstanceMonitoring: False
+      InstanceType: t2.micro
+      KeyName: MSP2KeyPair
+      LaunchConfigurationName: MSP2-LC
+      SecurityGroups: 
+        - !Ref AllowSSH
+        - !Ref AllowHTTP
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: MSP2-ASG
+      DesiredCapacity: 2
+      LaunchConfigurationName: !Ref LaunchConfiguration
+      MaxSize: 4
+      MinSize: 2
+      VPCZoneIdentifier:
+        - !Ref Subnet1
+
+#  APIGateway:
+#    Type: AWS::ApiGateway::RestApi
+#    Properties: 
+#      CloneFrom: String
+#      Description: String
+#      EndpointConfiguration: 
+#       EndpointConfiguration
+#     Name: MSP2-API
+#     Policy: Json
+
+#  APIGatewayGETMethod:
+#    Type: AWS::ApiGateway::Method
+#    Properties: 
+#      ApiKeyRequired: Boolean
+#      AuthorizationScopes: 
+#        - String
+#      AuthorizationType: String
+#      AuthorizerId: String
+#      HttpMethod: String
+#      Integration: 
+#        Integration
+#      MethodResponses: 
+#        - MethodResponse
+#     OperationName: String
+#     RequestModels: 
+#       Key : Value
+#     RequestParameters: 
+#       Key : Value
+#     RequestValidatorId: String
+#     ResourceId: String
+#     RestApiId: String
+
+  AllowSSH:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+      VpcId: !Ref VPC
+
+  AllowHTTP:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP access
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 0.0.0.0/0
+      VpcId: !Ref VPC
