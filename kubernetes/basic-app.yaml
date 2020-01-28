@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: basic-app
-        image: http://kubes-jenkins:5000/basic-app:latest
+        image: kubes-jenkins:5000/basic-app:latest
         ports:
         - containerPort: 5000
         readinessProbe:
