@@ -1,6 +1,7 @@
 body {
     background-color: rgb(31, 31, 31);
     color: mediumseagreen;
+    height: 100px;
     margin: 0 auto;
     border-left: 5px solid mediumseagreen;
 }
