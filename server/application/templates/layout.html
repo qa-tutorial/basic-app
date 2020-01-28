@@ -4,19 +4,21 @@
 	<style>
 		body {
 			background-color: linen;
+			text-align: center;
 		}
 		
 		title {
-			color: maroon;
+			background-color: maroon;
 			margin-left: 40px;
+			text-align:center;
 		}
 	</style>
 	<title>{{ title }} - Basic App</title>
 		<div class="title">
-			<h1 style="text-align:center;">Basic App</h1>
+			<h1>Basic App</h1>
 		</div>
 	</head>
-	<body style="text-align:center;">
+	<body>
 		{% block body_content %}
 		{% endblock %}
 		<br>Host: {{ machine }}
