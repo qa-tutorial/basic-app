@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	<style>
+		body {
+			background-color: linen;
+		}
+		
+		title {
+			color: maroon;
+			margin-left: 40px;
+		}
+	</style>
 	<title>{{ title }} - Basic App</title>
 		<div class="title">
 			<h1 style="text-align:center;">Basic App</h1>
 		</div>
 	</head>
-	<body style="text-align:center; background-color: blue;">
+	<body style="text-align:center;">
 		{% block body_content %}
 		{% endblock %}
 		<br>Host: {{ machine }}
