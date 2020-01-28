@@ -1,0 +1,12 @@
+body {
+    background-color: darkslategrey;
+    color: mediumseagreen;
+    margin: auto;
+    text-align: right;
+    border-left: 5px solid mediumseagreen;
+}
+
+h1 {
+    color: mediumseagreen;
+    text-align:center;
+}
