@@ -9,8 +9,5 @@ from os import getenv
 # Route to home page
 @app.route('/', methods = ["GET"])
 def home():
-    response = requests.get("https://l5iqv5z489.execute-api.eu-west-2.amazonaws.com/test/get-name")
-    package = response.json()
-    name = f"{package['firstname']} {package['surname']}"
     machine = getenv("HOSTNAME")
-    return render_template('index.html', title = 'Home', name = name, machine = machine)
+    return render_template('index.html', title = 'Home', machine = machine)
